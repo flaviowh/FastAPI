@@ -52,35 +52,42 @@ def update_pokemon(pokemon_id : int, pokemon: schemas.PokemonCreate, db: Session
     db.commit()
     return old_pokemon
 
-# @app.post("/trainers/", response_model=schemas.Trainer)
-# def create_trainer(trainer: schemas.TrainerCreate, db: Session = Depends(get_db)):
-#     db_trainer = crud.get_trainer_by_name(db, name=trainer.name)
-#     if db_trainer:
-#         raise HTTPException(status_code=400, detail="Trainer already registered")
-#     return crud.create_trainer(db=db, trainer=trainer)
 
-# @app.get("/trainers/", response_model=list[schemas.Trainer])
-# def read_trainers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     trainers = crud.get_trainers(db, skip=skip, limit=limit)
-#     return trainers
+##  TRAINERS
 
 
-# @app.get("/trainers/{trainer_id}", response_model=schemas.Trainer)
-# def read_trainer(trainer_id: int, db: Session = Depends(get_db)):
-#     db_trainer = crud.get_trainer(db, trainer_id=trainer_id)
-#     if db_trainer is None:
-#         raise HTTPException(status_code=404, detail="Trainer not found")
-#     return db_trainer
+@app.get("/trainers/", response_model=list[schemas.Trainer])
+def read_trainers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    trainers = crud.get_all_trainers(db = db, skip=skip, limit=limit)
+    return trainers   
 
 
-# @app.post("/trainers/{trainer_id}/pokemon/", response_model=schemas.Pokemon)
-# def create_pokemon_for_trainer(
-#     trainer_id: int, pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)
-# ):
-#     return crud.create_pokemon(db=db, pokemon=pokemon)
+@app.get("/pokemons/{trainer_id}")
+def get_trainer(trainer_id:int, db: Session = Depends(get_db)):
+    db_trainer = crud.get_trainer_by_id(db, trainer_id)
+    return db_trainer
 
+@app.get("/pokemons/search/{trainer_name}")
+def search_trainer(trainer_name:str, db: Session = Depends(get_db)):
+    db_trainer = crud.get_trainer_by_name(db, trainer_name)
+    return db_trainer
 
-# @app.get("/pokemons/", response_model=list[schemas.Pokemon])
-# def read_pokemon(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     pokemon = crud.get_pokemon(db, skip=skip, limit=limit)
-#     return pokemon
+@app.post("/trainers/", response_model=schemas.Trainer)
+def create_trainer(trainer: schemas.TrainerCreate, db: Session = Depends(get_db)):
+    db_trainer = crud.get_trainer_by_name(db=db, trainer_name=trainer.name)
+    if db_trainer:
+        raise HTTPException(status_code=400, detail="Trainer already added.")
+    return crud.add_trainer(db=db, trainer=trainer)
+
+@app.put("/trainer/{trainer_id}", response_model=schemas.Trainer)
+def update_trainer(trainer_id : int, trainer: schemas.TrainerCreate, db: Session = Depends(get_db)):
+    old_trainer = crud.get_trainer_by_id(db=db, trainer_id= trainer_id)
+    if not old_trainer:
+        raise HTTPException(status_code=400, detail="Trainer not found by ID. Try adding it.")
+
+    old_trainer.name = trainer.name
+    old_trainer.bio = trainer.bio
+
+    db.commit()
+    return old_trainer
+

@@ -5,9 +5,14 @@ class PokemonBase(BaseModel):
     type: str 
     description : str | None = None
 
+class TrainerBase(BaseModel):
+    name: str
+    bio: str | None = None
+
 
 class Pokemon(PokemonBase):
     id: int
+    #owners: list[TrainerBase]
     
     class Config:
         orm_mode = True
@@ -17,8 +22,15 @@ class PokemonCreate(PokemonBase):
 
 
 
+class Trainer(TrainerBase):
+    id: int
+   # pokemons: list[PokemonBase]
 
+    class Config:
+        orm_mode = True
 
+class TrainerCreate(TrainerBase):
+    pass
 
 # class PokemonBase(BaseModel):
 #     id: int

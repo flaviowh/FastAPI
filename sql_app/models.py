@@ -4,13 +4,13 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-class Pokemon(Base):
-    __tablename__ = "pokemon"
+# class Pokemon(Base):
+#     __tablename__ = "pokemon"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
-    type = Column(String)
-    description = Column(String, index=True, nullable=True)
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String, unique=True, index=True)
+#     type = Column(String)
+#     description = Column(String, index=True, nullable=True)
     
 
 
@@ -23,22 +23,24 @@ class Pokemon(Base):
 
 
 
-# class Trainer(Base):
-#     __tablename__ = "trainer"
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String, index=True)
-#     bio = Column(String, index=True, nullable=True)
-#     pokemons =  relationship("Pokemon", secondary="pokedex", back_populates="pokemon")
+class Trainer(Base):
+    __tablename__ = "trainer"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    bio = Column(String, index=True, nullable=True)
+
+   # pokemons =  relationship("Pokemon", secondary="pokedex", back_populates="pokemon")
 
     
-# class Pokemon(Base):
-#     __tablename__ = "pokemon"
+class Pokemon(Base):
+    __tablename__ = "pokemon"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String, unique=True, index=True)
-#     type = Column(String)
-#     description = Column(String, index=True, nullable=True)
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    type = Column(String)
+    description = Column(String, index=True, nullable=True)
     
     
-#     owners = relationship("Trainer", secondary="pokedex", back_populates="trainer")
+    #owners = relationship("Trainer", secondary="pokedex", back_populates="trainer")
 
