@@ -12,7 +12,7 @@ class TrainerBase(BaseModel):
 
 class Pokemon(PokemonBase):
     id: int
-    #owners: list[TrainerBase]
+    
     
     class Config:
         orm_mode = True
@@ -24,13 +24,26 @@ class PokemonCreate(PokemonBase):
 
 class Trainer(TrainerBase):
     id: int
-   # pokemons: list[PokemonBase]
+    
 
     class Config:
         orm_mode = True
 
 class TrainerCreate(TrainerBase):
     pass
+
+
+# class PokemonSchema(PokemonBase):
+#     trainers: list[TrainerBase]
+
+#     class Config:
+#         orm_mode = True
+
+# class TrainerSchema(TrainerBase):
+#     pokemons: list[PokemonBase]
+
+#     class Config:
+#         orm_mode = True
 
 # class PokemonBase(BaseModel):
 #     id: int

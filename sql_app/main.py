@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -26,6 +26,7 @@ def read_pokemons(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 def get_pokemon(pokemon_id:int, db: Session = Depends(get_db)):
     db_pokemon = crud.get_pokemon_by_id(db, pokemon_id)
     return db_pokemon
+
 
 @app.get("/pokemons/search/{pokemon_name}")
 def get_pokemon(pokemon_name:str, db: Session = Depends(get_db)):
@@ -62,12 +63,12 @@ def read_trainers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     return trainers   
 
 
-@app.get("/pokemons/{trainer_id}")
+@app.get("/trainers/{trainer_id}")
 def get_trainer(trainer_id:int, db: Session = Depends(get_db)):
     db_trainer = crud.get_trainer_by_id(db, trainer_id)
     return db_trainer
 
-@app.get("/pokemons/search/{trainer_name}")
+@app.get("/trainers/search/{trainer_name}")
 def search_trainer(trainer_name:str, db: Session = Depends(get_db)):
     db_trainer = crud.get_trainer_by_name(db, trainer_name)
     return db_trainer
@@ -79,7 +80,7 @@ def create_trainer(trainer: schemas.TrainerCreate, db: Session = Depends(get_db)
         raise HTTPException(status_code=400, detail="Trainer already added.")
     return crud.add_trainer(db=db, trainer=trainer)
 
-@app.put("/trainer/{trainer_id}", response_model=schemas.Trainer)
+@app.put("/trainers/{trainer_id}", response_model=schemas.Trainer)
 def update_trainer(trainer_id : int, trainer: schemas.TrainerCreate, db: Session = Depends(get_db)):
     old_trainer = crud.get_trainer_by_id(db=db, trainer_id= trainer_id)
     if not old_trainer:

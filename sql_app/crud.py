@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from . import models, schemas
 
@@ -7,7 +7,7 @@ def get_pokemon_by_id(db: Session, pokemon_id: int):
     return db.query(models.Pokemon).filter(models.Pokemon.id == pokemon_id).first()
 
 def get_pokemon_by_name(db: Session, pokemon_name: int):
-    return db.query(models.Pokemon).filter(str(models.Pokemon.name).lower() == pokemon_name.lower()).first()
+    return db.query(models.Pokemon).filter(models.Pokemon.name.like(pokemon_name.lower())).first()
 
 def get_all_pokemons(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Pokemon).offset(skip).limit(limit).all()
@@ -24,10 +24,12 @@ def get_all_trainers(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Trainer).offset(skip).limit(limit).all()
 
 def get_trainer_by_id(db: Session, trainer_id: int):
-    return db.query(models.Pokemon).filter(models.Trainer.id == trainer_id).first()
+    t = db.query(models.Trainer).where(models.Trainer.id == trainer_id).first()
+    db_trainer = {"id": t.id, "name": t.name, "bio": t.bio, "pokemons": [pokemon.name for pokemon in t.pokemons]}
+    return db_trainer
 
 def get_trainer_by_name(db: Session, trainer_name: str):
-    return db.query(models.Trainer).filter(str(models.Trainer.name).lower() == trainer_name.lower()).first()
+    return db.query(models.Trainer).filter(models.Trainer.name.like(trainer_name.lower())).first()
 
 def add_trainer(db: Session, trainer: schemas.TrainerCreate):
     db_trainer = models.Trainer(name= trainer.name, bio = trainer.bio)
