@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table, ARRAY
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -29,8 +29,11 @@ class Pokemon(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable= False)
-    type = Column(String, nullable= False)
-    description = Column(String, index=True, nullable=True)
+    types = Column(String, nullable=False)
+    abilities = Column(String, nullable=False)
+    generation = Column(Integer,  nullable=False)
+    is_legendary = Column(Boolean, nullable=False)
+    description = Column(String, nullable=False)
     
     
     trainers = relationship("Trainer", secondary="pokedex", back_populates="pokemons")

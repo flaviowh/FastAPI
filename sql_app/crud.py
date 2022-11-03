@@ -12,14 +12,6 @@ def get_pokemon_by_name(db: Session, pokemon_name: int):
 def get_all_pokemons(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Pokemon).offset(skip).limit(limit).all()
 
-def add_pokemon(db: Session, pokemon: schemas.PokemonCreate):
-    db_pokemon = models.Pokemon(name= pokemon.name, type = pokemon.type, description = pokemon.description)
-    db.add(db_pokemon)
-    db.commit()
-    db.refresh(db_pokemon)
-    return db_pokemon
-
-
 def get_all_trainers(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Trainer).offset(skip).limit(limit).all()
 
