@@ -37,7 +37,7 @@ def get_pokemon(pokemon_name:str, db: Session = Depends(get_db)):
 
 
 @app.put("/pokemons/{pokemon_id}", response_model=schemas.Pokemon)
-def update_pokemon(pokemon_id : int, pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)):
+def update_pokemon(pokemon_id : int, pokemon: schemas.PokemonCreate, db: Session = Depends(get_db), login = Depends(get_current_active_user)):
     old_pokemon = crud.get_pokemon_by_id(db=db, pokemon_id= pokemon_id)
     if not old_pokemon:
         raise HTTPException(status_code=400, detail="Pokemon not found by ID. Try adding it.")
@@ -83,7 +83,7 @@ def create_trainer(trainer: schemas.TrainerCreate, db: Session = Depends(get_db)
    # raise HTTPException(status_code=401, detail= "Username and password not valid.")
 
 @app.put("/trainers/{trainer_id}", response_model=schemas.Trainer)
-def update_trainer(trainer_id : int, trainer: schemas.TrainerCreate, db: Session = Depends(get_db)):
+def update_trainer(trainer_id : int, trainer: schemas.TrainerCreate, db: Session = Depends(get_db),login = Depends(get_current_active_user)):
     old_trainer = crud.get_trainer_by_id(db=db, trainer_id= trainer_id)
     if not old_trainer:
         raise HTTPException(status_code=400, detail="Trainer not found by ID. Try adding it.")

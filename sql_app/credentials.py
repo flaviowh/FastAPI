@@ -105,9 +105,4 @@ async def get_current_active_user(current_user: Credentials = Depends(get_curren
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user    
 
-# db = SessionLocal()
-# hashed = db.execute("SELECT * FROM credentials WHERE (username = 'flavio')").first().password
-
-# print(pwd_context.verify('letsgo', hashed))
-
 
